@@ -12,35 +12,48 @@
 <body>
 
     <div id="login-overlay">
-        <h2 style="letter-spacing: 10px;">UEE ACCESS</h2>
-        <input type="text" id="user-name" placeholder="PILOT CALLSIGN" maxlength="15">
-        <button id="login-btn" style="width: 200px;">INITIALIZE</button>
+        <div class="login-crest">◈ UNITED EMPIRE OF EARTH ◈</div>
+        <h1 class="login-title">UEE</h1>
+        <div class="login-subtitle">FLEET RECOGNITION TRAINING</div>
+        <input type="text" id="user-name" placeholder="PILOT CALLSIGN" maxlength="15" autocomplete="off">
+        <button id="login-btn">INITIALIZE</button>
     </div>
 
-    <div id="boot-overlay" style="display:none;"><div id="boot-text"></div></div>
+    <div id="boot-overlay" style="display:none;">
+        <div id="boot-text"></div>
+    </div>
 
     <div id="summary-overlay" style="display:none;">
-        <h2>SIMULATION TERMINATED</h2>
-        <div style="margin: 20px 0;">
-            <p>ASSETS IDENTIFIED: <span id="sum-score" style="color:#00d4ff;">0</span></p>
-            <p>PILOT ACCURACY: <span id="sum-acc" style="color:#00d4ff;">0%</span></p>
-            <p>PILOT RANK: <span id="sum-rank" style="color:#00d4ff;">---</span></p>
+        <h2 class="summary-title">SIMULATION TERMINATED</h2>
+        <div class="summary-stats">
+            <div class="summary-row">
+                <span class="summary-label">ASSETS IDENTIFIED</span>
+                <span class="summary-val" id="sum-score">0</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">PILOT ACCURACY</span>
+                <span class="summary-val" id="sum-acc">0%</span>
+            </div>
+            <div class="summary-row rank-row">
+                <span class="summary-label">PILOT RANK</span>
+                <span class="summary-val" id="sum-rank">---</span>
+            </div>
         </div>
-        <button id="restart-btn" style="width: 200px;">REBOOT</button>
+        <button id="restart-btn">REBOOT</button>
     </div>
 
     <div class="stats-bar">
-        <div>PILOT: <span id="display-name" style="color:white;">---</span></div>
-        <div>TIME: <span id="time-display" style="color: #ff3e3e;">60</span>S</div>
-        <div>F-ID: <span id="score" style="color: #3effaf;">0</span></div>
+        <div>PILOT: <span id="display-name" class="pilot-name">---</span></div>
+        <div>TIME: <span id="time-display" class="timer-val">60</span>S</div>
+        <div>F-ID: <span id="score" class="score-val">0</span></div>
     </div>
 
-    <model-viewer 
-        id="ship-viewer" 
-        src="" 
+    <model-viewer
+        id="ship-viewer"
+        src=""
         loading="eager"
-        auto-rotate 
-        camera-controls 
+        auto-rotate
+        camera-controls
         touch-action="none"
         shadow-intensity="0"
         exposure="1.2"

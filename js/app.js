@@ -115,9 +115,13 @@ async function startNewRound() {
     UI.viewer.addEventListener('load', () => {
         applyMaterials();
         UI.status.innerText = "CONFIRM HULL IDENTITY";
-        shuffled.forEach(c => {
+        shuffled.forEach((c, i) => {
             const btn = document.createElement('button');
-            btn.textContent = c.display.toUpperCase();
+            const badge = document.createElement('span');
+            badge.className = 'hotkey';
+            badge.textContent = i + 1;
+            btn.appendChild(badge);
+            btn.appendChild(document.createTextNode(c.display.toUpperCase()));
             btn.onclick = () => handleAnswer(c, btn);
             UI.optionsContainer.appendChild(btn);
         });
