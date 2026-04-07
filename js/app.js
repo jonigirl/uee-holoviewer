@@ -46,7 +46,12 @@ const AudioEngine = {
         this.play(300, 'sawtooth', 0.15, 0.04);
         setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60);
     },
-    bootup() { this.play(60, 'square', 2.0, 0.03); }
+    bootup() { this.play(60, 'square', 2.0, 0.03); },
+    gameover() {
+        this.play(440, 'sawtooth', 0.3, 0.06);
+        setTimeout(() => this.play(330, 'sawtooth', 0.3, 0.06), 200);
+        setTimeout(() => this.play(220, 'sawtooth', 0.5, 0.07), 400);
+    }
 };
 
 function applyMaterials() {
@@ -211,6 +216,7 @@ function getRank(accuracy) {
 function endGame() {
     state.isGameOver = true;
     clearInterval(state.timerInterval);
+    AudioEngine.gameover();
     const accuracy = Math.round((state.roundCorrect / (state.roundAttempts || 1)) * 100);
     const avgTime = state.correctTimes.length
         ? (state.correctTimes.reduce((a, b) => a + b, 0) / state.correctTimes.length / 1000).toFixed(1) + 's'
