@@ -27,7 +27,17 @@ const UI = {
 
 const AudioEngine = {
     ctx: null, init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
-    play(f, t, d, v) { if (!this.ctx) return; if (this.ctx.state === 'suspended') this.ctx.resume(); const o = this.ctx.createOscillator(); const g = this.ctx.createGain(); o.type = t; o.frequency.setValueAtTime(f, this.ctx.currentTime); g.gain.setValueAtTime(v, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d); o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + d); },
+    play(f, t, d, v) {
+        if (!this.ctx) return;
+        const doPlay = () => {
+            const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+            o.type = t; o.frequency.setValueAtTime(f, this.ctx.currentTime);
+            g.gain.setValueAtTime(v, this.ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d);
+            o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + d);
+        };
+        if (this.ctx.state === 'suspended') { this.ctx.resume().then(doPlay); } else { doPlay(); }
+    },
     correct() {
         this.play(600, 'sine', 0.12, 0.04);
         setTimeout(() => this.play(900, 'sine', 0.15, 0.05), 80);
@@ -37,7 +47,7 @@ const AudioEngine = {
         setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60);
     },
     bootup() { this.play(60, 'square', 2.0, 0.03); },
-    tick()    { this.play(880, 'square', 0.05, 0.025); }
+    tick()    { this.play(880, 'square', 0.08, 0.03); }
 };
 
 function applyMaterials() {
