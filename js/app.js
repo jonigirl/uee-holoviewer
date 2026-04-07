@@ -8,7 +8,7 @@ const CONFIG = {
     TRANSITION_DELAY_MS: 1000,
     DATA_PATH: 'data/ships.json',
     ROUND_TIME: 60,
-    MODELS_BASE: 'https://pub-8c2d983d3d740e38793852534ce4390.r2.dev'
+    MODELS_BASE: 'https://pub-08c2d983d3d740e38793852534ce4390.r2.dev'
 };
 
 const state = {
