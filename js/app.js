@@ -31,10 +31,12 @@ const AudioEngine = {
 function applyMaterials() {
     const model = UI.viewer.model; if (!model) return;
     model.materials.forEach(mat => {
-        mat.pbrMetallicRoughness.setBaseColorFactor([0.0, 0.45, 0.9, 0.75]);
-        mat.setEmissiveFactor([0.0, 0.55, 1.0]);
-        mat.pbrMetallicRoughness.setRoughnessFactor(0.05);
-        mat.pbrMetallicRoughness.setMetallicFactor(0.0);
+        // Dark blue-grey multiply — preserves original texture detail
+        mat.pbrMetallicRoughness.setBaseColorFactor([0.08, 0.22, 0.38, 1.0]);
+        // Moderate emissive — amplifies existing glow maps, dark areas stay dark
+        mat.setEmissiveFactor([0.0, 0.35, 0.65]);
+        mat.pbrMetallicRoughness.setRoughnessFactor(0.4);
+        mat.pbrMetallicRoughness.setMetallicFactor(0.75);
     });
 }
 
