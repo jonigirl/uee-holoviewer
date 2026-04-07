@@ -46,13 +46,7 @@ const AudioEngine = {
         this.play(300, 'sawtooth', 0.15, 0.04);
         setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60);
     },
-    bootup() { this.play(60, 'square', 2.0, 0.03); },
-    tick()    { this.play(880, 'square', 0.08, 0.03); },
-    startCountdown() {
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => { if (!state.isGameOver) this.play(880, 'square', 0.08, 0.03); }, i * 1000);
-        }
-    }
+    bootup() { this.play(60, 'square', 2.0, 0.03); }
 };
 
 function applyMaterials() {
@@ -115,7 +109,7 @@ function startTimer() {
         if (state.isGameOver) return;
         state.timeLeft--;
         UI.timeDisplay.textContent = state.timeLeft;
-        if (state.timeLeft === 10) AudioEngine.startCountdown();
+        if (state.timeLeft === 10) UI.timeDisplay.classList.add('urgent');
         if (state.timeLeft <= 0) endGame();
     }, 1000);
 }
@@ -123,6 +117,7 @@ function startTimer() {
 function startGame() {
     state.currentScore = 0; state.isGameOver = false; state.roundCorrect = 0; state.roundAttempts = 0;
     state.correctTimes = []; state.bestStreak = 0; state.currentStreak = 0;
+    UI.timeDisplay.classList.remove('urgent');
     state.unseenModels = [...state.allModels];
     UI.scoreDisplay.textContent = "0";
     UI.summaryOverlay.style.display = "none";

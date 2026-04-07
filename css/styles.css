@@ -107,7 +107,15 @@ body::before {
 
 .stats-bar .pilot-name { color: var(--uee-white); }
 .stats-bar .timer-val  { color: var(--uee-red); }
+.stats-bar .timer-val.urgent {
+    animation: timerUrgent 0.5s ease-in-out infinite;
+}
 .stats-bar .score-val  { color: var(--uee-green); }
+
+@keyframes timerUrgent {
+    0%, 100% { color: var(--uee-red); text-shadow: none; }
+    50%       { color: #ff8080; text-shadow: 0 0 12px var(--uee-red), 0 0 24px var(--uee-red); }
+}
 
 /* ── Interface / Status ── */
 .interface {
