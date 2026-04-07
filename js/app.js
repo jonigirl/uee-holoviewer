@@ -47,7 +47,12 @@ const AudioEngine = {
         setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60);
     },
     bootup() { this.play(60, 'square', 2.0, 0.03); },
-    tick()    { this.play(880, 'square', 0.08, 0.03); }
+    tick()    { this.play(880, 'square', 0.08, 0.03); },
+    startCountdown() {
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => { if (!state.isGameOver) this.play(880, 'square', 0.08, 0.03); }, i * 1000);
+        }
+    }
 };
 
 function applyMaterials() {
@@ -110,7 +115,7 @@ function startTimer() {
         if (state.isGameOver) return;
         state.timeLeft--;
         UI.timeDisplay.textContent = state.timeLeft;
-        if (state.timeLeft <= 10 && state.timeLeft > 0) AudioEngine.tick();
+        if (state.timeLeft === 10) AudioEngine.startCountdown();
         if (state.timeLeft <= 0) endGame();
     }, 1000);
 }
