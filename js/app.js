@@ -31,7 +31,12 @@ const AudioEngine = {
     correct() {
         this.play(600, 'sine', 0.12, 0.04);
         setTimeout(() => this.play(900, 'sine', 0.15, 0.05), 80);
-    }, wrong() { this.play(150, 'sawtooth', 0.4, 0.05); }, bootup() { this.play(60, 'square', 2.0, 0.03); }
+    },
+    wrong() {
+        this.play(300, 'sawtooth', 0.15, 0.06);
+        setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.25), 60);
+    },
+    bootup() { this.play(60, 'square', 2.0, 0.03); }
 };
 
 function applyMaterials() {
