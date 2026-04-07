@@ -257,10 +257,7 @@
       "id": "banu-defender",
       "display": "Banu Defender"
     },
-    {
-      "id": "citcon-concept",
-      "display": "CitizenCon Concept"
-    },
+
     {
       "id": "cnou-pioneer",
       "display": "Consolidated Pioneer"
@@ -307,7 +304,7 @@
     },
     {
       "id": "dc-blue-holo-with-cockpit-opt",
-      "display": "Deep Core Blue"
+      "display": "Drake Cutlass Blue"
     },
     {
       "id": "drak-cutlass-red-v2-opt",
@@ -443,15 +440,15 @@
     },
     {
       "id": "hoverquad",
-      "display": "Hover Quad"
+      "display": "Consolidated Outland HoverQuad"
     },
     {
       "id": "krig-l-21-wolf",
-      "display": "Krig L21 Wolf"
+      "display": "Kruger Intergalactic L-21 Wolf"
     },
     {
       "id": "krig-l22-alpha-wolf",
-      "display": "Krig L22 Alpha Wolf"
+      "display": "Kruger Intergalactic L-22 Alpha Wolf"
     },
     {
       "id": "kruger-archimedes",
