@@ -1,3 +1,4 @@
+# convert-ctm.ps1 — UEE Recognition Training v15.0
 # Converts downloaded CTM files to GLB and replaces models in the project
 # CTM -> OBJ (ctmconv) -> GLB (obj2gltf)
 # Usage: powershell -ExecutionPolicy Bypass -File tools\convert-ctm.ps1

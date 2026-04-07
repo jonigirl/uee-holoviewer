@@ -1,4 +1,5 @@
 /**
+ * upload-r2-wrangler.mjs — UEE Recognition Training v15.0
  * Upload all GLB models to Cloudflare R2 using Wrangler
  * Usage:
  *   1. npx wrangler login   (first time only — opens browser)

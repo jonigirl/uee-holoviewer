@@ -1,3 +1,4 @@
+# download-ctm.ps1 — UEE Recognition Training v15.0
 # Downloads confirmed CTM files for the 26 missing-normal GLBs
 # Output: D:\SC Data Extraction\ctm-downloads\
 # Usage: powershell -ExecutionPolicy Bypass -File tools\download-ctm.ps1

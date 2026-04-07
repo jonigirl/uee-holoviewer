@@ -1,5 +1,5 @@
 /**
- * add-normals.mjs
+ * add-normals.mjs — UEE Recognition Training v15.0
  * Computes and adds smooth vertex normals to GLB files that are missing them.
  * Handles both plain and Draco-compressed GLBs.
  * Usage: node tools/add-normals.mjs
