@@ -127,6 +127,7 @@ async function startNewRound() {
         UI.status.textContent = "CONFIRM HULL IDENTITY";
         shuffled.forEach((c, i) => {
             const btn = document.createElement('button');
+            btn.dataset.shipId = c.id;
             const badge = document.createElement('span');
             badge.className = 'hotkey';
             badge.textContent = i + 1;
@@ -155,6 +156,8 @@ function handleAnswer(choice, btn) {
         AudioEngine.wrong(); state.currentScore = 0;
         UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.classList.add('wrong');
         btn.classList.add('wrong');
+        const correctBtn = UI.optionsContainer.querySelector(`[data-ship-id="${state.nextTarget.id}"]`);
+        if (correctBtn) correctBtn.classList.add('correct');
     }
 
     UI.scoreDisplay.textContent = state.currentScore;
