@@ -48,17 +48,24 @@
         <div>F-ID: <span id="score" class="score-val">0</span></div>
     </div>
 
-    <model-viewer
-        id="ship-viewer"
-        src=""
-        loading="eager"
-        auto-rotate
-        camera-controls
-        touch-action="none"
-        shadow-intensity="0"
-        exposure="1.2"
-        draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/">
-    </model-viewer>
+    <div class="viewer-wrap">
+        <model-viewer
+            id="ship-viewer"
+            src=""
+            loading="eager"
+            auto-rotate
+            auto-rotate-delay="0"
+            rotation-per-second="12deg"
+            camera-controls
+            touch-action="none"
+            shadow-intensity="0"
+            exposure="0.9"
+            tone-mapping="neutral"
+            environment-image="neutral"
+            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/">
+        </model-viewer>
+        <div class="scan-beam"></div>
+    </div>
 
     <!-- Hidden preloader: warms browser cache for next round -->
     <model-viewer

@@ -31,9 +31,10 @@ const AudioEngine = {
 function applyMaterials() {
     const model = UI.viewer.model; if (!model) return;
     model.materials.forEach(mat => {
-        mat.pbrMetallicRoughness.setBaseColorFactor([0.0, 0.4, 0.8, 0.5]);
-        mat.setEmissiveFactor([0.0, 1.0, 1.2]);
-        mat.pbrMetallicRoughness.setRoughnessFactor(0.2);
+        mat.pbrMetallicRoughness.setBaseColorFactor([0.0, 0.45, 0.9, 0.75]);
+        mat.setEmissiveFactor([0.0, 0.55, 1.0]);
+        mat.pbrMetallicRoughness.setRoughnessFactor(0.05);
+        mat.pbrMetallicRoughness.setMetallicFactor(0.0);
     });
 }
 
