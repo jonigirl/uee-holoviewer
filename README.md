@@ -1,19 +1,27 @@
 # UEE Fleet Recognition Trainer
 **v15.0**
 
-A high-fidelity, web-based technical trainer designed for UEE Pilots to practice rapid identification of spacecraft signatures. 
+A high-fidelity, web-based technical trainer designed for UEE Pilots to practice rapid identification of spacecraft signatures.
 
 ## 🚀 Features
 * **60-Second Time Attack:** Identify as many hulls as possible before the link drops.
-* **Holographic Interface:** Real-time 3D ship rendering with "Holoviewer" aesthetics.
+* **Holographic Interface:** Real-time 3D ship rendering with RSI-quality holographic aesthetics.
+* **207 Ships:** Full fleet roster with smooth vertex normals on every model.
+* **After-Action Report:** Accuracy, pilot rank, best streak, average response time, and fastest ID.
 * **Keyboard Hotkeys:** Use `1-4` for rapid-response identification.
 * **Zero-Lag Preloading:** Seamless transitions between targets using background caching.
-* **After-Action Reporting:** Detailed accuracy tracking and Pilot Ranking system.
+* **Audio Feedback:** Rising chirp for correct IDs, descending buzz for mismatches, game-over sequence.
+* **Mobile Friendly:** Fully playable on phone browsers.
+* **Correct Answer Reveal:** Wrong answers highlight the correct option so you can learn.
 
 ## 🛠️ Setup & Local Development
 1. Clone the repository.
-2. Ensure your ship models are located in the `/models` directory as `.glb` files.
-3. Open `index.html` using a local server (like VS Code Live Server) to avoid CORS issues with 3D models.
+2. Ship models are in `/models` as `.glb` files — already processed with smooth vertex normals.
+3. Open `index.html` via a local server (e.g. VS Code Live Server) to avoid CORS issues with 3D models.
+
+### Model Pipeline (tools/)
+`tools/add-normals.mjs` adds smooth vertex normals to GLB files using `@gltf-transform`.
+Run `npm install` first, then `node tools/add-normals.mjs` from the project root.
 
 ## 🛠️ Feedback & Improvements
 Have a suggestion or found a bug? Please open an **Issue** on this repository! 
