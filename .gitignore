@@ -10,3 +10,4 @@ models/
 # Private tools and local-only files — not for public distribution
 tools/private/
 TOOLS.md
+CLAUDE.md

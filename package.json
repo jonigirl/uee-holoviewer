@@ -1,5 +1,8 @@
 {
   "version": "15.0.0",
+  "scripts": {
+    "serve": "npx serve -l 5500"
+  },
   "dependencies": {
     "@gltf-transform/core": "^4.3.0",
     "@gltf-transform/extensions": "^4.3.0",
