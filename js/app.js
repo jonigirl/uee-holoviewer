@@ -105,7 +105,7 @@ async function startNewRound() {
     if (state.isGameOver || state.isTransitioning) return;
     state.isTransitioning = true;
     UI.optionsContainer.innerHTML = "";
-    UI.status.style.color = "";
+    UI.status.classList.remove('correct', 'wrong');
     UI.status.textContent = "ANALYZING SPECTRAL SIGNATURE...";
 
     if (state.unseenModels.length === 0) state.unseenModels = [...state.allModels];
@@ -149,11 +149,11 @@ function handleAnswer(choice, btn) {
     state.roundAttempts++;
     if (choice.id === state.nextTarget.id) {
         AudioEngine.correct(); state.currentScore++; state.roundCorrect++;
-        UI.status.textContent = "VERIFIED MATCH"; UI.status.style.color = "#3effaf";
+        UI.status.textContent = "VERIFIED MATCH"; UI.status.classList.add('correct');
         btn.classList.add('correct');
     } else {
         AudioEngine.wrong(); state.currentScore = 0;
-        UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.style.color = "#ff3e3e";
+        UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.classList.add('wrong');
         btn.classList.add('wrong');
     }
 

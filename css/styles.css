@@ -123,6 +123,14 @@ body::before {
     text-shadow: 0 0 12px var(--uee-blue);
     color: var(--uee-blue-dim);
 }
+#status-text.correct {
+    color: var(--uee-green);
+    text-shadow: 0 0 12px var(--uee-green);
+}
+#status-text.wrong {
+    color: var(--uee-red);
+    text-shadow: 0 0 12px var(--uee-red);
+}
 
 /* ── Answer Buttons ── */
 .options-grid {
