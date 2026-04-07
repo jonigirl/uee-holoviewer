@@ -108,7 +108,10 @@ async function startNewRound() {
     UI.status.classList.remove('correct', 'wrong');
     UI.status.textContent = "ANALYZING SPECTRAL SIGNATURE...";
 
-    if (state.unseenModels.length === 0) state.unseenModels = [...state.allModels];
+    if (state.unseenModels.length === 0) {
+        state.unseenModels = [...state.allModels];
+        if (state.nextTarget) state.unseenModels = state.unseenModels.filter(m => m.id !== state.nextTarget.id);
+    }
     const idx = Math.floor(Math.random() * state.unseenModels.length);
     const target = state.unseenModels.splice(idx, 1)[0];
     state.nextTarget = target;
