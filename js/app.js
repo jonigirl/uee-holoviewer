@@ -5,9 +5,10 @@
 // ── Configuration & State ────────────────────────────────────────────────────
 
 const CONFIG = {
-    TRANSITION_DELAY_MS: 1000,   // pause between rounds (ms)
+    TRANSITION_DELAY_MS: 1000,
     DATA_PATH: 'data/ships.json',
-    ROUND_TIME: 60               // seconds per game
+    ROUND_TIME: 60,
+    MODELS_BASE: 'https://pub-8c2d983d3d740e38793852534ce4390.r2.dev'
 };
 
 const state = {
@@ -101,7 +102,7 @@ function applyMaterials() {
 function preloadNext() {
     if (state.unseenModels.length === 0) return;
     const peekIdx = Math.floor(Math.random() * state.unseenModels.length);
-    UI.preloader.src = `models/${state.unseenModels[peekIdx].id}.glb`;
+    UI.preloader.src = `${CONFIG.MODELS_BASE}/${state.unseenModels[peekIdx].id}.glb`;
 }
 
 // ── Initialisation ───────────────────────────────────────────────────────────
@@ -197,7 +198,7 @@ async function startNewRound() {
     }
     const shuffled = choices.sort(() => Math.random() - 0.5);
 
-    UI.viewer.src = `models/${target.id}.glb`;
+    UI.viewer.src = `${CONFIG.MODELS_BASE}/${target.id}.glb`;
 
     // { once: true } ensures the listener self-removes after firing
     UI.viewer.addEventListener('load', () => {

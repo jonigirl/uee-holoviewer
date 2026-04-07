@@ -4,3 +4,4 @@ Thumbs.db
 *.tmp.glb
 node_modules/
 *.bin
+tools/upload-r2.mjs
