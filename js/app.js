@@ -186,5 +186,4 @@ function endGame() {
     UI.sumAcc.textContent = accuracy + "%";
     UI.sumRank.textContent = getRank(accuracy);
     UI.summaryOverlay.style.display = "flex";
-    UI.summaryOverlay.style.opacity = "1";
 }
