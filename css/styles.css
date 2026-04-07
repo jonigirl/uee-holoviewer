@@ -86,25 +86,6 @@ body::before {
     animation: platformPulse 3s ease-in-out infinite;
 }
 
-/* Scan beam */
-.scan-beam {
-    position: absolute;
-    left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.6), transparent);
-    pointer-events: none;
-    z-index: 3;
-    animation: scanBeam 4s linear infinite;
-    opacity: 0.5;
-}
-
-@keyframes scanBeam {
-    0%   { top: 0%; opacity: 0; }
-    5%   { opacity: 0.5; }
-    95%  { opacity: 0.5; }
-    100% { top: 100%; opacity: 0; }
-}
-
 @keyframes platformPulse {
     0%, 100% { opacity: 0.7; transform: translateX(-50%) scaleX(1); }
     50%       { opacity: 1;   transform: translateX(-50%) scaleX(1.08); }
