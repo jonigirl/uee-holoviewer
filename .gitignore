@@ -13,5 +13,6 @@ tools/download-ctm.ps1
 tools/download-ctm.sh
 tools/convert-ctm.ps1
 
-# Local-only documentation
+# Local-only documentation and tools
 TOOLS.md
+tools/preview.html
