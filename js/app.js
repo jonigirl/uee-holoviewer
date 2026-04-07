@@ -116,7 +116,7 @@ window.onload = async () => {
 
     document.getElementById('login-btn').onclick = () => {
         AudioEngine.init(); // must be triggered by user gesture to satisfy browser policy
-        state.playerName = document.getElementById('user-name').value || "PILOT";
+        state.playerName = document.getElementById('user-name').value.trim() || "PILOT";
         UI.nameDisplay.textContent = state.playerName.toUpperCase();
         UI.loginOverlay.style.display = "none";
         playBoot();
@@ -247,7 +247,7 @@ function handleAnswer(choice, btn) {
         UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.classList.add('wrong');
         btn.classList.add('wrong');
         // Reveal the correct answer so the player can learn from the mistake
-        const correctBtn = UI.optionsContainer.querySelector(`[data-ship-id="${state.nextTarget.id}"]`);
+        const correctBtn = UI.optionsContainer.querySelector(`[data-ship-id="${CSS.escape(state.nextTarget.id)}"]`);
         if (correctBtn) correctBtn.classList.add('correct');
     }
 

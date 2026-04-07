@@ -269,8 +269,6 @@ input:focus {
 
 input::placeholder { color: rgba(0,212,255,0.35); letter-spacing: 3px; }
 
-.login-btn-wrap { position: relative; }
-
 #login-btn, #restart-btn {
     width: 200px;
     padding: 14px;
