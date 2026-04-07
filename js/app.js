@@ -110,8 +110,15 @@ window.onload = async () => {
     // Load ship manifest on page load so it's ready before the player logs in
     try {
         const res = await fetch(CONFIG.DATA_PATH);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         state.allModels = (await res.json()).ships;
-    } catch(e) { console.error("Manifest Load Failed"); }
+        if (!state.allModels.length) throw new Error('Empty manifest');
+    } catch(e) {
+        console.error('Manifest load failed:', e.message);
+        const btn = document.getElementById('login-btn');
+        btn.textContent = 'MANIFEST ERROR — RELOAD';
+        btn.disabled = true;
+    }
 
     document.getElementById('login-btn').onclick = () => {
         AudioEngine.init(); // must be triggered by user gesture to satisfy browser policy
@@ -130,6 +137,7 @@ window.onload = async () => {
     document.addEventListener('keydown', (e) => {
         const index = ['1','2','3','4'].indexOf(e.key);
         if (index === -1) return;
+        e.preventDefault();
         const btn = UI.optionsContainer.children[index];
         if (btn) btn.click();
     });
@@ -173,6 +181,7 @@ function startGame() {
 
 async function startNewRound() {
     if (state.isGameOver || state.isTransitioning) return;
+    if (state.allModels.length === 0) { endGame(); return; }
     state.isTransitioning = true;
     UI.optionsContainer.innerHTML = "";
     UI.status.classList.remove('correct', 'wrong');

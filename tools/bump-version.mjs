@@ -14,7 +14,12 @@ import { readFileSync, writeFileSync } from 'fs';
 
 // ── Read current version from package.json (single source of truth) ──────────
 
-const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+const pkgRaw = readFileSync('package.json', 'utf8');
+const pkg    = JSON.parse(pkgRaw);
+if (!pkg.version || !/^\d+\.\d+\.\d+$/.test(pkg.version)) {
+    console.error('Error: package.json missing or invalid version field');
+    process.exit(1);
+}
 const [maj, min, pat] = pkg.version.split('.').map(Number);
 
 const arg = process.argv[2];
@@ -54,7 +59,7 @@ let updated = 0;
 
 // ── package.json — full semver ────────────────────────────────────────────────
 
-const newPkgContent = readFileSync('package.json', 'utf8')
+const newPkgContent = pkgRaw
     .replace(`"version": "${oldSemver}"`, `"version": "${newSemver}"`);
 writeFileSync('package.json', newPkgContent);
 console.log(`  ✓ package.json`);

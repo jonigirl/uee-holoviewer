@@ -400,6 +400,9 @@ input::placeholder { color: rgba(0,212,255,0.35); letter-spacing: 3px; }
     }
 }
 
+/* ── Hidden preloader (warms browser cache) ───────────── */
+#ship-preloader { display: none; width: 1px; height: 1px; }
+
 /* ── Site Footer ───────────────────────────────────────── */
 .site-footer {
     position: fixed;
