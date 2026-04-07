@@ -3,7 +3,7 @@
  */
 
 const CONFIG = { TRANSITION_DELAY_MS: 1000, DATA_PATH: 'data/ships.json', ROUND_TIME: 60 };
-const state = { allModels: [], unseenModels: [], playerName: "", currentScore: 0, isTransitioning: false, timeLeft: CONFIG.ROUND_TIME, timerInterval: null, isGameOver: false, roundCorrect: 0, roundAttempts: 0, nextTarget: null };
+const state = { allModels: [], unseenModels: [], playerName: "", currentScore: 0, isTransitioning: false, timeLeft: CONFIG.ROUND_TIME, timerInterval: null, isGameOver: false, roundCorrect: 0, roundAttempts: 0, nextTarget: null, roundStartTime: 0, correctTimes: [], bestStreak: 0, currentStreak: 0 };
 
 const UI = {
     viewer: document.getElementById('ship-viewer'),
@@ -94,6 +94,7 @@ function startTimer() {
 
 function startGame() {
     state.currentScore = 0; state.isGameOver = false; state.roundCorrect = 0; state.roundAttempts = 0;
+    state.correctTimes = []; state.bestStreak = 0; state.currentStreak = 0;
     state.unseenModels = [...state.allModels];
     UI.scoreDisplay.textContent = "0";
     UI.summaryOverlay.style.display = "none";
@@ -128,6 +129,7 @@ async function startNewRound() {
         applyMaterials();
         preloadNext();
         UI.status.textContent = "CONFIRM HULL IDENTITY";
+        state.roundStartTime = Date.now();
         shuffled.forEach((c, i) => {
             const btn = document.createElement('button');
             btn.dataset.shipId = c.id;
@@ -151,12 +153,17 @@ async function startNewRound() {
 function handleAnswer(choice, btn) {
     if (state.isTransitioning || state.isGameOver) return;
     state.roundAttempts++;
+    const elapsed = Date.now() - state.roundStartTime;
     if (choice.id === state.nextTarget.id) {
         AudioEngine.correct(); state.currentScore++; state.roundCorrect++;
+        state.correctTimes.push(elapsed);
+        state.currentStreak++;
+        if (state.currentStreak > state.bestStreak) state.bestStreak = state.currentStreak;
         UI.status.textContent = "VERIFIED MATCH"; UI.status.classList.add('correct');
         btn.classList.add('correct');
     } else {
         AudioEngine.wrong(); state.currentScore = 0;
+        state.currentStreak = 0;
         UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.classList.add('wrong');
         btn.classList.add('wrong');
         const correctBtn = UI.optionsContainer.querySelector(`[data-ship-id="${state.nextTarget.id}"]`);
