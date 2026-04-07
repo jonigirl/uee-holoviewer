@@ -75,7 +75,6 @@ const AudioEngine = {
     wrong()    { this.play(300, 'sawtooth', 0.15, 0.04); setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60); },
     bootup()   { this.play(60, 'square', 2.0, 0.03); },
     gameover() {
-        // Descending three-note sequence on simulation end
         this.play(440, 'sawtooth', 0.3, 0.06);
         setTimeout(() => this.play(330, 'sawtooth', 0.3, 0.06), 200);
         setTimeout(() => this.play(220, 'sawtooth', 0.5, 0.07), 400);
@@ -89,8 +88,8 @@ const AudioEngine = {
 function applyMaterials() {
     const model = UI.viewer.model; if (!model) return;
     model.materials.forEach(mat => {
-        mat.pbrMetallicRoughness.setBaseColorFactor([0.03, 0.12, 0.22, 1.0]); // very dark base
-        mat.setEmissiveFactor([0.0, 0.06, 0.14]);                              // near-zero emissive
+        mat.pbrMetallicRoughness.setBaseColorFactor([0.03, 0.12, 0.22, 1.0]);
+        mat.setEmissiveFactor([0.0, 0.06, 0.14]);
         mat.pbrMetallicRoughness.setRoughnessFactor(0.3);
         mat.pbrMetallicRoughness.setMetallicFactor(0.85);
     });
@@ -154,7 +153,7 @@ function startTimer() {
         if (state.isGameOver) return;
         state.timeLeft--;
         UI.timeDisplay.textContent = state.timeLeft;
-        if (state.timeLeft === 10) UI.timeDisplay.classList.add('urgent'); // trigger pulse animation
+        if (state.timeLeft === 10) UI.timeDisplay.classList.add('urgent');
         if (state.timeLeft <= 0) endGame();
     }, 1000);
 }
@@ -185,7 +184,6 @@ async function startNewRound() {
         if (state.nextTarget) state.unseenModels = state.unseenModels.filter(m => m.id !== state.nextTarget.id);
     }
 
-    // Pick a random unseen ship as the target
     const idx = Math.floor(Math.random() * state.unseenModels.length);
     const target = state.unseenModels.splice(idx, 1)[0];
     state.nextTarget = target;
@@ -205,7 +203,7 @@ async function startNewRound() {
         applyMaterials();
         preloadNext();
         UI.status.textContent = "CONFIRM HULL IDENTITY";
-        state.roundStartTime = Date.now(); // start timing response
+        state.roundStartTime = Date.now();
         shuffled.forEach((c, i) => {
             const btn = document.createElement('button');
             btn.dataset.shipId = c.id; // used to locate correct btn on wrong answer
@@ -233,7 +231,7 @@ async function startNewRound() {
 function handleAnswer(choice, btn) {
     if (state.isTransitioning || state.isGameOver) return;
     state.roundAttempts++;
-    const elapsed = Date.now() - state.roundStartTime; // response time in ms
+    const elapsed = Date.now() - state.roundStartTime;
     if (choice.id === state.nextTarget.id) {
         AudioEngine.correct(); state.currentScore++; state.roundCorrect++;
         state.correctTimes.push(elapsed);
