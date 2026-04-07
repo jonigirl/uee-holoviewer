@@ -31,12 +31,13 @@ const AudioEngine = {
 function applyMaterials() {
     const model = UI.viewer.model; if (!model) return;
     model.materials.forEach(mat => {
-        // Dark blue-grey multiply — preserves original texture detail
-        mat.pbrMetallicRoughness.setBaseColorFactor([0.08, 0.22, 0.38, 1.0]);
-        // Moderate emissive — amplifies existing glow maps, dark areas stay dark
-        mat.setEmissiveFactor([0.0, 0.35, 0.65]);
-        mat.pbrMetallicRoughness.setRoughnessFactor(0.4);
-        mat.pbrMetallicRoughness.setMetallicFactor(0.75);
+        // Very dark base — suppresses baked bright hologram textures
+        mat.pbrMetallicRoughness.setBaseColorFactor([0.03, 0.12, 0.22, 1.0]);
+        // Near-zero emissive — prevents baked emissive maps from blowing out
+        mat.setEmissiveFactor([0.0, 0.06, 0.14]);
+        // High metalness + moderate roughness — dark metallic hull with reflections
+        mat.pbrMetallicRoughness.setRoughnessFactor(0.3);
+        mat.pbrMetallicRoughness.setMetallicFactor(0.85);
     });
 }
 
