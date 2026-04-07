@@ -28,7 +28,10 @@ const UI = {
 const AudioEngine = {
     ctx: null, init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
     play(f, t, d, v) { if (!this.ctx) return; if (this.ctx.state === 'suspended') this.ctx.resume(); const o = this.ctx.createOscillator(); const g = this.ctx.createGain(); o.type = t; o.frequency.setValueAtTime(f, this.ctx.currentTime); g.gain.setValueAtTime(v, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d); o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + d); },
-    correct() { this.play(800, 'sine', 0.2, 0.05); }, wrong() { this.play(150, 'sawtooth', 0.4, 0.05); }, bootup() { this.play(60, 'square', 2.0, 0.03); }
+    correct() {
+        this.play(600, 'sine', 0.12, 0.04);
+        setTimeout(() => this.play(900, 'sine', 0.15, 0.05), 80);
+    }, wrong() { this.play(150, 'sawtooth', 0.4, 0.05); }, bootup() { this.play(60, 'square', 2.0, 0.03); }
 };
 
 function applyMaterials() {
