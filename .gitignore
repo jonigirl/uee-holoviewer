@@ -10,6 +10,7 @@ models/
 # Asset pipeline tools — not for public distribution (RSI IP)
 tools/cross-ref.js
 tools/download-ctm.ps1
+tools/download-ctm.sh
 tools/convert-ctm.ps1
 
 # Local-only documentation
