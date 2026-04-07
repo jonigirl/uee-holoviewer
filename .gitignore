@@ -1,3 +1,5 @@
 # UEE Recognition Training - v15.0
 Thumbs.db
 *.tmp
+*.tmp.glb
+node_modules/
