@@ -105,6 +105,7 @@ async function startNewRound() {
     if (state.isGameOver || state.isTransitioning) return;
     state.isTransitioning = true;
     UI.optionsContainer.innerHTML = "";
+    UI.status.style.color = "";
     UI.status.textContent = "ANALYZING SPECTRAL SIGNATURE...";
 
     if (state.unseenModels.length === 0) state.unseenModels = [...state.allModels];
