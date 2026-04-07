@@ -6,7 +6,7 @@ A high-fidelity, web-based technical trainer designed for UEE Pilots to practice
 ## 🚀 Features
 * **60-Second Time Attack:** Identify as many hulls as possible before the link drops.
 * **Holographic Interface:** Real-time 3D ship rendering with RSI-quality holographic aesthetics.
-* **207 Ships:** Full fleet roster with smooth vertex normals on every model.
+* **206 Ships:** Full fleet roster with smooth vertex normals on every model.
 * **After-Action Report:** Accuracy, pilot rank, best streak, average response time, and fastest ID.
 * **Keyboard Hotkeys:** Use `1-4` for rapid-response identification.
 * **Zero-Lag Preloading:** Seamless transitions between targets using background caching.
@@ -18,7 +18,7 @@ A high-fidelity, web-based technical trainer designed for UEE Pilots to practice
 1. Clone the repository.
 2. Run `npm install` (required for the normals tool only — no runtime dependencies).
 3. Open `index.html` via a local server (e.g. VS Code Live Server).
-4. All 207 ship models are served from Cloudflare R2 — no local files needed.
+4. All 206 ship models are served from Cloudflare R2 — no local files needed.
 
 ### Tools (tools/)
 - `tools/add-normals.mjs` — adds smooth vertex normals to GLB files using `@gltf-transform`.
