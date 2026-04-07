@@ -2,8 +2,33 @@
  * UEE Recognition Training - v15.0
  */
 
-const CONFIG = { TRANSITION_DELAY_MS: 1000, DATA_PATH: 'data/ships.json', ROUND_TIME: 60 };
-const state = { allModels: [], unseenModels: [], playerName: "", currentScore: 0, isTransitioning: false, timeLeft: CONFIG.ROUND_TIME, timerInterval: null, isGameOver: false, roundCorrect: 0, roundAttempts: 0, nextTarget: null, roundStartTime: 0, correctTimes: [], bestStreak: 0, currentStreak: 0 };
+// ── Configuration & State ────────────────────────────────────────────────────
+
+const CONFIG = {
+    TRANSITION_DELAY_MS: 1000,   // pause between rounds (ms)
+    DATA_PATH: 'data/ships.json',
+    ROUND_TIME: 60               // seconds per game
+};
+
+const state = {
+    allModels: [],               // full ship list loaded from ships.json
+    unseenModels: [],            // ships not yet shown this cycle (deduplication pool)
+    playerName: "",
+    currentScore: 0,             // current streak count (resets on wrong answer)
+    isTransitioning: false,      // guard: prevents double-firing during model load
+    timeLeft: CONFIG.ROUND_TIME,
+    timerInterval: null,
+    isGameOver: false,
+    roundCorrect: 0,             // correct answers this round
+    roundAttempts: 0,            // total answers this round
+    nextTarget: null,            // current ship being identified
+    roundStartTime: 0,           // timestamp when answer options appeared (ms)
+    correctTimes: [],            // response times for correct answers (ms)
+    bestStreak: 0,               // highest consecutive streak this round
+    currentStreak: 0             // running streak counter
+};
+
+// ── DOM References ───────────────────────────────────────────────────────────
 
 const UI = {
     viewer: document.getElementById('ship-viewer'),
@@ -25,8 +50,14 @@ const UI = {
     bootText: document.getElementById('boot-text')
 };
 
+// ── Audio Engine ─────────────────────────────────────────────────────────────
+
 const AudioEngine = {
-    ctx: null, init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+    ctx: null,
+    init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+
+    // play(frequency, waveType, duration, volume)
+    // Handles browser auto-suspend by awaiting ctx.resume() before playing
     play(f, t, d, v) {
         if (!this.ctx) return;
         const doPlay = () => {
@@ -38,49 +69,52 @@ const AudioEngine = {
         };
         if (this.ctx.state === 'suspended') { this.ctx.resume().then(doPlay); } else { doPlay(); }
     },
-    correct() {
-        this.play(600, 'sine', 0.12, 0.04);
-        setTimeout(() => this.play(900, 'sine', 0.15, 0.05), 80);
-    },
-    wrong() {
-        this.play(300, 'sawtooth', 0.15, 0.04);
-        setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60);
-    },
-    bootup() { this.play(60, 'square', 2.0, 0.03); },
+
+    correct()  { this.play(600, 'sine', 0.12, 0.04); setTimeout(() => this.play(900, 'sine', 0.15, 0.05), 80); },
+    wrong()    { this.play(300, 'sawtooth', 0.15, 0.04); setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60); },
+    bootup()   { this.play(60, 'square', 2.0, 0.03); },
     gameover() {
+        // Descending three-note sequence on simulation end
         this.play(440, 'sawtooth', 0.3, 0.06);
         setTimeout(() => this.play(330, 'sawtooth', 0.3, 0.06), 200);
         setTimeout(() => this.play(220, 'sawtooth', 0.5, 0.07), 400);
     }
 };
 
+// ── Model Materials ──────────────────────────────────────────────────────────
+
+// Override PBR material values to produce the RSI holographic look:
+// dark metallic teal hull with suppressed baked textures
 function applyMaterials() {
     const model = UI.viewer.model; if (!model) return;
     model.materials.forEach(mat => {
-        // Very dark base — suppresses baked bright hologram textures
-        mat.pbrMetallicRoughness.setBaseColorFactor([0.03, 0.12, 0.22, 1.0]);
-        // Near-zero emissive — prevents baked emissive maps from blowing out
-        mat.setEmissiveFactor([0.0, 0.06, 0.14]);
-        // High metalness + moderate roughness — dark metallic hull with reflections
+        mat.pbrMetallicRoughness.setBaseColorFactor([0.03, 0.12, 0.22, 1.0]); // very dark base
+        mat.setEmissiveFactor([0.0, 0.06, 0.14]);                              // near-zero emissive
         mat.pbrMetallicRoughness.setRoughnessFactor(0.3);
         mat.pbrMetallicRoughness.setMetallicFactor(0.85);
     });
 }
 
+// ── Preloader ────────────────────────────────────────────────────────────────
+
+// Warms the browser cache for a random upcoming ship while the player answers
 function preloadNext() {
     if (state.unseenModels.length === 0) return;
     const peekIdx = Math.floor(Math.random() * state.unseenModels.length);
     UI.preloader.src = `models/${state.unseenModels[peekIdx].id}.glb`;
 }
 
+// ── Initialisation ───────────────────────────────────────────────────────────
+
 window.onload = async () => {
+    // Load ship manifest on page load so it's ready before the player logs in
     try {
         const res = await fetch(CONFIG.DATA_PATH);
         state.allModels = (await res.json()).ships;
     } catch(e) { console.error("Manifest Load Failed"); }
 
     document.getElementById('login-btn').onclick = () => {
-        AudioEngine.init();
+        AudioEngine.init(); // must be triggered by user gesture to satisfy browser policy
         state.playerName = document.getElementById('user-name').value || "PILOT";
         UI.nameDisplay.textContent = state.playerName.toUpperCase();
         UI.loginOverlay.style.display = "none";
@@ -92,6 +126,7 @@ window.onload = async () => {
         startGame();
     };
 
+    // Keyboard shortcuts: 1-4 map to the four answer buttons
     document.addEventListener('keydown', (e) => {
         const index = ['1','2','3','4'].indexOf(e.key);
         if (index === -1) return;
@@ -100,11 +135,15 @@ window.onload = async () => {
     });
 };
 
+// ── Boot Sequence ────────────────────────────────────────────────────────────
+
 function playBoot() {
     UI.bootOverlay.style.display = "flex"; AudioEngine.bootup();
     UI.bootText.textContent = ">> INITIALIZING UEE NEURAL LINK\n>> DECRYPTING FLEET MANIFEST\n>> UPLOAD COMPLETE.";
     setTimeout(() => { UI.bootOverlay.style.display = "none"; startGame(); }, 2500);
 }
+
+// ── Timer ────────────────────────────────────────────────────────────────────
 
 function startTimer() {
     clearInterval(state.timerInterval);
@@ -114,10 +153,12 @@ function startTimer() {
         if (state.isGameOver) return;
         state.timeLeft--;
         UI.timeDisplay.textContent = state.timeLeft;
-        if (state.timeLeft === 10) UI.timeDisplay.classList.add('urgent');
+        if (state.timeLeft === 10) UI.timeDisplay.classList.add('urgent'); // trigger pulse animation
         if (state.timeLeft <= 0) endGame();
     }, 1000);
 }
+
+// ── Game Flow ────────────────────────────────────────────────────────────────
 
 function startGame() {
     state.currentScore = 0; state.isGameOver = false; state.roundCorrect = 0; state.roundAttempts = 0;
@@ -137,14 +178,18 @@ async function startNewRound() {
     UI.status.classList.remove('correct', 'wrong');
     UI.status.textContent = "ANALYZING SPECTRAL SIGNATURE...";
 
+    // Replenish pool when all ships have been seen; exclude the last shown ship
     if (state.unseenModels.length === 0) {
         state.unseenModels = [...state.allModels];
         if (state.nextTarget) state.unseenModels = state.unseenModels.filter(m => m.id !== state.nextTarget.id);
     }
+
+    // Pick a random unseen ship as the target
     const idx = Math.floor(Math.random() * state.unseenModels.length);
     const target = state.unseenModels.splice(idx, 1)[0];
     state.nextTarget = target;
 
+    // Build 4 choices: the correct answer + 3 random decoys
     let choices = [target];
     while(choices.length < 4) {
         let d = state.allModels[Math.floor(Math.random() * state.allModels.length)];
@@ -153,14 +198,16 @@ async function startNewRound() {
     const shuffled = choices.sort(() => Math.random() - 0.5);
 
     UI.viewer.src = `models/${target.id}.glb`;
+
+    // { once: true } ensures the listener self-removes after firing
     UI.viewer.addEventListener('load', () => {
         applyMaterials();
         preloadNext();
         UI.status.textContent = "CONFIRM HULL IDENTITY";
-        state.roundStartTime = Date.now();
+        state.roundStartTime = Date.now(); // start timing response
         shuffled.forEach((c, i) => {
             const btn = document.createElement('button');
-            btn.dataset.shipId = c.id;
+            btn.dataset.shipId = c.id; // used to locate correct btn on wrong answer
             const badge = document.createElement('span');
             badge.className = 'hotkey';
             badge.textContent = i + 1;
@@ -171,6 +218,8 @@ async function startNewRound() {
         });
         state.isTransitioning = false;
     }, { once: true });
+
+    // If a model fails to load, release the transition lock and skip to next round
     UI.viewer.addEventListener('error', () => {
         UI.status.textContent = "SIGNAL LOST — REACQUIRING...";
         state.isTransitioning = false;
@@ -178,10 +227,12 @@ async function startNewRound() {
     }, { once: true });
 }
 
+// ── Answer Handling ──────────────────────────────────────────────────────────
+
 function handleAnswer(choice, btn) {
     if (state.isTransitioning || state.isGameOver) return;
     state.roundAttempts++;
-    const elapsed = Date.now() - state.roundStartTime;
+    const elapsed = Date.now() - state.roundStartTime; // response time in ms
     if (choice.id === state.nextTarget.id) {
         AudioEngine.correct(); state.currentScore++; state.roundCorrect++;
         state.correctTimes.push(elapsed);
@@ -194,6 +245,7 @@ function handleAnswer(choice, btn) {
         state.currentStreak = 0;
         UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.classList.add('wrong');
         btn.classList.add('wrong');
+        // Reveal the correct answer so the player can learn from the mistake
         const correctBtn = UI.optionsContainer.querySelector(`[data-ship-id="${state.nextTarget.id}"]`);
         if (correctBtn) correctBtn.classList.add('correct');
     }
@@ -202,6 +254,8 @@ function handleAnswer(choice, btn) {
     state.isTransitioning = true;
     setTimeout(() => { if(!state.isGameOver) { state.isTransitioning = false; startNewRound(); } }, CONFIG.TRANSITION_DELAY_MS);
 }
+
+// ── Rank Calculation ─────────────────────────────────────────────────────────
 
 function getRank(accuracy) {
     if (accuracy >= 95) return "ADMIRAL";
@@ -212,6 +266,8 @@ function getRank(accuracy) {
     if (accuracy >= 40) return "CADET";
     return "CIVILIAN";
 }
+
+// ── End Game ─────────────────────────────────────────────────────────────────
 
 function endGame() {
     state.isGameOver = true;
