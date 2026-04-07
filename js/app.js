@@ -18,6 +18,9 @@ const UI = {
     sumScore: document.getElementById('sum-score'),
     sumAcc: document.getElementById('sum-acc'),
     sumRank: document.getElementById('sum-rank'),
+    sumStreak: document.getElementById('sum-streak'),
+    sumAvgTime: document.getElementById('sum-avg-time'),
+    sumBestTime: document.getElementById('sum-best-time'),
     bootOverlay: document.getElementById('boot-overlay'),
     bootText: document.getElementById('boot-text')
 };
@@ -189,8 +192,17 @@ function endGame() {
     state.isGameOver = true;
     clearInterval(state.timerInterval);
     const accuracy = Math.round((state.roundCorrect / (state.roundAttempts || 1)) * 100);
+    const avgTime = state.correctTimes.length
+        ? (state.correctTimes.reduce((a, b) => a + b, 0) / state.correctTimes.length / 1000).toFixed(1) + 's'
+        : '---';
+    const bestTime = state.correctTimes.length
+        ? (Math.min(...state.correctTimes) / 1000).toFixed(1) + 's'
+        : '---';
     UI.sumScore.textContent = state.roundCorrect;
     UI.sumAcc.textContent = accuracy + "%";
     UI.sumRank.textContent = getRank(accuracy);
+    UI.sumStreak.textContent = state.bestStreak;
+    UI.sumAvgTime.textContent = avgTime;
+    UI.sumBestTime.textContent = bestTime;
     UI.summaryOverlay.style.display = "flex";
 }
