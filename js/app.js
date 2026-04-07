@@ -33,8 +33,8 @@ const AudioEngine = {
         setTimeout(() => this.play(900, 'sine', 0.15, 0.05), 80);
     },
     wrong() {
-        this.play(300, 'sawtooth', 0.15, 0.06);
-        setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.25), 60);
+        this.play(300, 'sawtooth', 0.15, 0.04);
+        setTimeout(() => this.play(180, 'sawtooth', 0.2, 0.06), 60);
     },
     bootup() { this.play(60, 'square', 2.0, 0.03); }
 };
