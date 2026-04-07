@@ -16,13 +16,17 @@ A high-fidelity, web-based technical trainer designed for UEE Pilots to practice
 
 ## 🛠️ Setup & Local Development
 1. Clone the repository.
-2. Open `index.html` via a local server (e.g. VS Code Live Server).
-3. Models are served from Cloudflare R2 — no local model files needed.
+2. Run `npm install` (required for the normals tool only — no runtime dependencies).
+3. Open `index.html` via a local server (e.g. VS Code Live Server).
+4. All 207 ship models are served from Cloudflare R2 — no local files needed.
 
-### Model Pipeline (tools/)
-- `tools/add-normals.mjs` — adds smooth vertex normals to GLB files using `@gltf-transform`. Run `npm install` first.
-- `tools/upload-r2-wrangler.mjs` — uploads processed GLBs to the R2 bucket. Requires `npx wrangler login` once to authenticate.
-- Models are **not** stored in git. They live in the `uee-models` R2 bucket and are served via the public CDN URL.
+### Tools (tools/)
+- `tools/add-normals.mjs` — adds smooth vertex normals to GLB files using `@gltf-transform`.
+- `tools/upload-r2-wrangler.mjs` — uploads processed GLBs to the R2 bucket. Requires `npx wrangler login` once.
+- `tools/bump-version.mjs` — updates the version string across all project files.
+
+> **Note:** Asset acquisition and processing tools are not included in this repository.
+> Ship models are the property of Cloud Imperium Rights LLC — see Legal section below.
 
 ## 🛠️ Feedback & Improvements
 Have a suggestion or found a bug? Please open an **Issue** on this repository! 

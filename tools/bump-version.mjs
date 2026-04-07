@@ -81,9 +81,6 @@ const DISPLAY_FILES = [
     'README.md',
     'tools/add-normals.mjs',
     'tools/upload-r2-wrangler.mjs',
-    'tools/cross-ref.js',
-    'tools/download-ctm.ps1',
-    'tools/convert-ctm.ps1',
     'tools/bump-version.mjs',
 ];
 
