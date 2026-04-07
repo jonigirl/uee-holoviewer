@@ -1,13 +1,13 @@
 /**
  * UEE Recognition Training - v15.0
- * Restores "Cool" Visuals and Refined Menu Logic
  */
 
-const CONFIG = { TRANSITION_DELAY_MS: 1200, DATA_PATH: 'data/ships.json', ROUND_TIME: 60 };
+const CONFIG = { TRANSITION_DELAY_MS: 1000, DATA_PATH: 'data/ships.json', ROUND_TIME: 60 };
 const state = { allModels: [], unseenModels: [], playerName: "", currentScore: 0, isTransitioning: false, timeLeft: CONFIG.ROUND_TIME, timerInterval: null, isGameOver: false, roundCorrect: 0, roundAttempts: 0, nextTarget: null };
 
 const UI = {
     viewer: document.getElementById('ship-viewer'),
+    preloader: document.getElementById('ship-preloader'),
     status: document.getElementById('status-text'),
     optionsContainer: document.getElementById('options'),
     loginOverlay: document.getElementById('login-overlay'),
@@ -31,12 +31,16 @@ const AudioEngine = {
 function applyMaterials() {
     const model = UI.viewer.model; if (!model) return;
     model.materials.forEach(mat => {
-        // Transparent Electric Blue Base
-        mat.pbrMetallicRoughness.setBaseColorFactor([0.0, 0.4, 0.8, 0.5]); 
-        // Intense Holographic Glow
-        mat.setEmissiveFactor([0.0, 1.0, 1.2]); 
+        mat.pbrMetallicRoughness.setBaseColorFactor([0.0, 0.4, 0.8, 0.5]);
+        mat.setEmissiveFactor([0.0, 1.0, 1.2]);
         mat.pbrMetallicRoughness.setRoughnessFactor(0.2);
     });
+}
+
+function preloadNext() {
+    if (state.unseenModels.length === 0) return;
+    const peekIdx = Math.floor(Math.random() * state.unseenModels.length);
+    UI.preloader.src = `models/${state.unseenModels[peekIdx].id}.glb`;
 }
 
 window.onload = async () => {
@@ -44,11 +48,11 @@ window.onload = async () => {
         const res = await fetch(CONFIG.DATA_PATH);
         state.allModels = (await res.json()).ships;
     } catch(e) { console.error("Manifest Load Failed"); }
-    
+
     document.getElementById('login-btn').onclick = () => {
         AudioEngine.init();
         state.playerName = document.getElementById('user-name').value || "PILOT";
-        UI.nameDisplay.innerText = state.playerName.toUpperCase();
+        UI.nameDisplay.textContent = state.playerName.toUpperCase();
         UI.loginOverlay.style.display = "none";
         playBoot();
     };
@@ -68,18 +72,18 @@ window.onload = async () => {
 
 function playBoot() {
     UI.bootOverlay.style.display = "flex"; AudioEngine.bootup();
-    UI.bootText.innerText = ">> INITIALIZING UEE NEURAL LINK\n>> DECRYPTING FLEET MANIFEST\n>> UPLOAD COMPLETE.";
+    UI.bootText.textContent = ">> INITIALIZING UEE NEURAL LINK\n>> DECRYPTING FLEET MANIFEST\n>> UPLOAD COMPLETE.";
     setTimeout(() => { UI.bootOverlay.style.display = "none"; startGame(); }, 2500);
 }
 
 function startTimer() {
     clearInterval(state.timerInterval);
     state.timeLeft = CONFIG.ROUND_TIME;
-    UI.timeDisplay.innerText = state.timeLeft;
+    UI.timeDisplay.textContent = state.timeLeft;
     state.timerInterval = setInterval(() => {
         if (state.isGameOver) return;
         state.timeLeft--;
-        UI.timeDisplay.innerText = state.timeLeft;
+        UI.timeDisplay.textContent = state.timeLeft;
         if (state.timeLeft <= 0) endGame();
     }, 1000);
 }
@@ -87,7 +91,7 @@ function startTimer() {
 function startGame() {
     state.currentScore = 0; state.isGameOver = false; state.roundCorrect = 0; state.roundAttempts = 0;
     state.unseenModels = [...state.allModels];
-    UI.scoreDisplay.innerText = "0";
+    UI.scoreDisplay.textContent = "0";
     UI.summaryOverlay.style.display = "none";
     startTimer();
     startNewRound();
@@ -97,7 +101,7 @@ async function startNewRound() {
     if (state.isGameOver || state.isTransitioning) return;
     state.isTransitioning = true;
     UI.optionsContainer.innerHTML = "";
-    UI.status.innerText = "ANALYZING SPECTRAL SIGNATURE...";
+    UI.status.textContent = "ANALYZING SPECTRAL SIGNATURE...";
 
     if (state.unseenModels.length === 0) state.unseenModels = [...state.allModels];
     const idx = Math.floor(Math.random() * state.unseenModels.length);
@@ -114,7 +118,8 @@ async function startNewRound() {
     UI.viewer.src = `models/${target.id}.glb`;
     UI.viewer.addEventListener('load', () => {
         applyMaterials();
-        UI.status.innerText = "CONFIRM HULL IDENTITY";
+        preloadNext();
+        UI.status.textContent = "CONFIRM HULL IDENTITY";
         shuffled.forEach((c, i) => {
             const btn = document.createElement('button');
             const badge = document.createElement('span');
@@ -128,9 +133,9 @@ async function startNewRound() {
         state.isTransitioning = false;
     }, { once: true });
     UI.viewer.addEventListener('error', () => {
-        UI.status.innerText = "SIGNAL LOST — REACQUIRING...";
+        UI.status.textContent = "SIGNAL LOST — REACQUIRING...";
         state.isTransitioning = false;
-        setTimeout(() => { if (!state.isGameOver) startNewRound(); }, 1000);
+        setTimeout(() => { if (!state.isGameOver) startNewRound(); }, CONFIG.TRANSITION_DELAY_MS);
     }, { once: true });
 }
 
@@ -139,17 +144,17 @@ function handleAnswer(choice, btn) {
     state.roundAttempts++;
     if (choice.id === state.nextTarget.id) {
         AudioEngine.correct(); state.currentScore++; state.roundCorrect++;
-        UI.status.innerText = "VERIFIED MATCH"; UI.status.style.color = "#3effaf";
+        UI.status.textContent = "VERIFIED MATCH"; UI.status.style.color = "#3effaf";
         btn.classList.add('correct');
     } else {
         AudioEngine.wrong(); state.currentScore = 0;
-        UI.status.innerText = "ID ERROR: MISMATCH"; UI.status.style.color = "#ff3e3e";
+        UI.status.textContent = "ID ERROR: MISMATCH"; UI.status.style.color = "#ff3e3e";
         btn.classList.add('wrong');
     }
-    
-    UI.scoreDisplay.innerText = state.currentScore;
+
+    UI.scoreDisplay.textContent = state.currentScore;
     state.isTransitioning = true;
-    setTimeout(() => { if(!state.isGameOver) { state.isTransitioning = false; startNewRound(); } }, 1000);
+    setTimeout(() => { if(!state.isGameOver) { state.isTransitioning = false; startNewRound(); } }, CONFIG.TRANSITION_DELAY_MS);
 }
 
 function getRank(accuracy) {
@@ -166,9 +171,9 @@ function endGame() {
     state.isGameOver = true;
     clearInterval(state.timerInterval);
     const accuracy = Math.round((state.roundCorrect / (state.roundAttempts || 1)) * 100);
-    UI.sumScore.innerText = state.roundCorrect;
-    UI.sumAcc.innerText = accuracy + "%";
-    UI.sumRank.innerText = getRank(accuracy);
+    UI.sumScore.textContent = state.roundCorrect;
+    UI.sumAcc.textContent = accuracy + "%";
+    UI.sumRank.textContent = getRank(accuracy);
     UI.summaryOverlay.style.display = "flex";
     UI.summaryOverlay.style.opacity = "1";
 }

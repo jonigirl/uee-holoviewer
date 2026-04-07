@@ -7,7 +7,7 @@
     <title>UEE Recognition Training</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="css/styles.css">
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js" integrity="sha384-NxrHiuPcsJaRbXc9EoFTt5OZ6WPVqKeDgcnykGs3spXmq0J7hbbGGlyUkrGuoJoA" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -57,6 +57,14 @@
         touch-action="none"
         shadow-intensity="0"
         exposure="1.2"
+        draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/">
+    </model-viewer>
+
+    <!-- Hidden preloader: warms browser cache for next round -->
+    <model-viewer
+        id="ship-preloader"
+        src=""
+        style="display:none; width:1px; height:1px;"
         draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/">
     </model-viewer>
 
