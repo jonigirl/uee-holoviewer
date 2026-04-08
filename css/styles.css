@@ -400,6 +400,29 @@ input::placeholder { color: rgba(0,212,255,0.35); letter-spacing: 3px; }
     }
 }
 
+/* ── Beta Ribbon — remove this block (and #beta-ribbon in index.html) when out of beta ── */
+#beta-ribbon {
+    position: fixed;
+    top: 18px;
+    left: -35px;
+    z-index: 9999;
+    width: 140px;
+    text-align: center;
+    padding: 5px 0;
+    background: rgba(0, 212, 255, 0.1);
+    border-top: 1px solid var(--uee-blue);
+    border-bottom: 1px solid var(--uee-blue);
+    color: var(--uee-blue);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transform: rotate(-45deg);
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.15);
+}
+
 /* ── Hidden preloader (warms browser cache) ───────────── */
 #ship-preloader { display: none; width: 1px; height: 1px; }
 
