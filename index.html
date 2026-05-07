@@ -1,102 +1,150 @@
-<!DOCTYPE html>
+<!doctype html>
 <!-- UEE Recognition Training - v15.0 -->
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UEE Recognition Training</title>
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <link rel="stylesheet" href="css/styles.css">
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-</head>
-<body>
-
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script
+      type="module"
+      src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"
+    ></script>
+  </head>
+  <body>
     <!-- BETA RIBBON — remove this element (and #beta-ribbon in styles.css) when out of beta -->
     <div id="beta-ribbon">BETA</div>
 
     <div id="login-overlay">
-        <div class="login-crest">◈ UNITED EMPIRE OF EARTH ◈</div>
-        <h1 class="login-title">UEE</h1>
-        <div class="login-subtitle">FLEET RECOGNITION TRAINING</div>
-        <input type="text" id="user-name" placeholder="PILOT CALLSIGN" maxlength="15" autocomplete="off">
-        <button id="login-btn">INITIALIZE</button>
+      <div class="login-crest">◈ UNITED EMPIRE OF EARTH ◈</div>
+      <h1 class="login-title">UEE</h1>
+      <div class="login-subtitle">FLEET RECOGNITION TRAINING</div>
+      <label for="user-name" class="sr-only">Pilot Callsign</label>
+      <input
+        type="text"
+        id="user-name"
+        placeholder="PILOT CALLSIGN"
+        maxlength="15"
+        autocomplete="username"
+      />
+      <button id="login-btn">INITIALIZE</button>
     </div>
 
-    <div id="boot-overlay" style="display:none;">
-        <div id="boot-text"></div>
+    <div id="boot-overlay" style="display: none">
+      <div id="boot-text"></div>
     </div>
 
-    <div id="summary-overlay" style="display:none;">
-        <h2 class="summary-title">SIMULATION TERMINATED</h2>
-        <div class="summary-stats">
-            <div class="summary-row">
-                <span class="summary-label">ASSETS IDENTIFIED</span>
-                <span class="summary-val" id="sum-score">0</span>
-            </div>
-            <div class="summary-row">
-                <span class="summary-label">PILOT ACCURACY</span>
-                <span class="summary-val" id="sum-acc">0%</span>
-            </div>
-            <div class="summary-row">
-                <span class="summary-label">BEST STREAK</span>
-                <span class="summary-val" id="sum-streak">0</span>
-            </div>
-            <div class="summary-row">
-                <span class="summary-label">AVG RESPONSE</span>
-                <span class="summary-val" id="sum-avg-time">---</span>
-            </div>
-            <div class="summary-row">
-                <span class="summary-label">FASTEST ID</span>
-                <span class="summary-val" id="sum-best-time">---</span>
-            </div>
-            <div class="summary-row rank-row">
-                <span class="summary-label">PILOT RANK</span>
-                <span class="summary-val" id="sum-rank">---</span>
-            </div>
+    <div id="summary-overlay" style="display: none">
+      <h2 class="summary-title">SIMULATION TERMINATED</h2>
+      <div class="summary-stats">
+        <div class="summary-row">
+          <span class="summary-label">ASSETS IDENTIFIED</span>
+          <span class="summary-val" id="sum-score">0</span>
         </div>
-        <button id="restart-btn">REBOOT</button>
+        <div class="summary-row">
+          <span class="summary-label">PILOT ACCURACY</span>
+          <span class="summary-val" id="sum-acc">0%</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">BEST STREAK</span>
+          <span class="summary-val" id="sum-streak">0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">AVG RESPONSE</span>
+          <span class="summary-val" id="sum-avg-time">---</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">FASTEST ID</span>
+          <span class="summary-val" id="sum-best-time">---</span>
+        </div>
+        <div class="summary-row rank-row">
+          <span class="summary-label">PILOT RANK</span>
+          <span class="summary-val" id="sum-rank">---</span>
+        </div>
+      </div>
+      <button id="restart-btn">REBOOT</button>
     </div>
 
     <div class="stats-bar">
-        <div>PILOT: <span id="display-name" class="pilot-name">---</span></div>
-        <div>TIME: <span id="time-display" class="timer-val">60</span>S</div>
-        <div>F-ID: <span id="score" class="score-val">0</span></div>
+      <div>PILOT: <span id="display-name" class="pilot-name">---</span></div>
+      <div>TIME: <span id="time-display" class="timer-val">60</span>S</div>
+      <div>F-ID: <span id="score" class="score-val">0</span></div>
     </div>
 
     <div class="viewer-wrap">
-        <model-viewer
-            id="ship-viewer"
-            src=""
-            loading="eager"
-            auto-rotate
-            auto-rotate-delay="0"
-            rotation-per-second="12deg"
-            camera-controls
-            touch-action="none"
-            shadow-intensity="0"
-            exposure="1.1"
-            tone-mapping="neutral"
-            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/">
-        </model-viewer>
+      <model-viewer
+        id="ship-viewer"
+        src=""
+        loading="eager"
+        auto-rotate
+        auto-rotate-delay="0"
+        rotation-per-second="12deg"
+        camera-controls
+        touch-action="none"
+        shadow-intensity="0"
+        exposure="1.1"
+        tone-mapping="neutral"
+        draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+      >
+      </model-viewer>
     </div>
 
     <!-- Hidden preloader: warms browser cache for next round -->
     <model-viewer
-        id="ship-preloader"
-        src=""
-        draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/">
+      id="ship-preloader"
+      src=""
+      draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+    >
     </model-viewer>
 
     <div class="interface">
-        <div id="status-text">SYSTEM READY</div>
-        <div class="options-grid" id="options"></div>
+      <div id="status-text">SYSTEM READY</div>
+      <div class="options-grid" id="options"></div>
     </div>
 
     <footer class="site-footer">
-        v15.0 &bull; Unofficial fan project &mdash; not affiliated with Cloud Imperium Games &bull;
-        <a href="https://github.com/jonigirl/uee-holoviewer/issues" target="_blank" rel="noopener">Report issues / feedback</a>
+      v15.0 &bull; Unofficial fan project &mdash; not affiliated with Cloud
+      Imperium Games &bull;
+      <a
+        href="https://github.com/jonigirl/uee-holoviewer/issues"
+        target="_blank"
+        rel="noopener"
+        >Report issues / feedback</a
+      >
     </footer>
 
+    <button
+      id="font-toggle-btn"
+      aria-label="Switch to Atkinson Hyperlegible font"
+    >
+      Aa
+    </button>
+
     <script type="module" src="js/app.js"></script>
-</body>
+    <script>
+      (function () {
+        var btn = document.getElementById("font-toggle-btn");
+        var PREF_KEY = "uee_font";
+        function applyFont(pref) {
+          document.body.classList.toggle("readable-mode", pref === "readable");
+          btn.setAttribute(
+            "aria-label",
+            pref === "readable"
+              ? "Switch to Rajdhani font"
+              : "Switch to Atkinson Hyperlegible font",
+          );
+          btn.textContent = pref === "readable" ? "Aa" : "Aa";
+        }
+        applyFont(localStorage.getItem(PREF_KEY) || "default");
+        btn.addEventListener("click", function () {
+          var next = document.body.classList.contains("readable-mode")
+            ? "default"
+            : "readable";
+          localStorage.setItem(PREF_KEY, next);
+          applyFont(next);
+        });
+      })();
+    </script>
+  </body>
 </html>
